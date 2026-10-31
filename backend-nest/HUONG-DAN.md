@@ -37,7 +37,7 @@ Mở **terminal thứ hai** (dấu `+`), rồi:
 cd backend-nest
 npm run smoke
 ```
-Phải ra `29 đạt, 0 lỗi`.
+Phải ra `35 đạt, 0 lỗi`.
 
 ### 5. Đẩy lên GitHub (để mang đến trường)
 ```bash
@@ -127,5 +127,24 @@ curl -s localhost:3000/api/books -H "Authorization: Bearer $TOKEN"
 - Không xóa sách hoặc độc giả đã có phiếu mượn. Không giảm số lượng sách thấp hơn số đang cho mượn.
 - Mật khẩu băm bằng bcrypt, đăng nhập bằng JWT, phân quyền Admin / Thủ thư / Độc giả.
 
-## E. Bước tiếp theo
+## E. Swagger – trang tài liệu API
+
+Chạy server rồi mở **http://localhost:3000/api-docs**. Trang liệt kê toàn bộ API theo nhóm (App, Auth, Books, Readers, Loans, Reports, Settings, Users) và cho bấm **Try it out** để thử ngay.
+
+Cách thử các API cần đăng nhập:
+1. Mở `POST /api/auth/login`, bấm **Try it out**, nhập `{"username":"admin","password":"admin123"}`, bấm **Execute**.
+2. Copy giá trị `accessToken` trong kết quả.
+3. Bấm nút **Authorize** (ổ khóa, góc trên phải trang), dán token vào, bấm **Authorize**.
+4. Từ giờ các API khác (có ổ khóa) gọi được bình thường.
+
+## F. Refresh token và cookie
+
+- `POST /api/auth/login` trả `accessToken` (sống ngắn, mặc định 15 phút) và **set refresh token vào cookie httpOnly** (JavaScript trong trình duyệt không đọc được, an toàn hơn lưu localStorage).
+- Khi access token hết hạn, gọi `POST /api/auth/refresh` (trình duyệt tự gửi cookie) để lấy access token mới. Mỗi lần refresh, refresh token cũ bị thay bằng token mới.
+- `POST /api/auth/logout` thu hồi refresh token trong CSDL và xóa cookie. Token cũ dùng lại sẽ bị từ chối (401).
+- Mỗi tài khoản có một refresh token đang hợp lệ: đăng nhập ở nơi khác sẽ làm phiên cũ phải đăng nhập lại.
+- Khi gọi từ giao diện web, `fetch` cần thêm `credentials: 'include'` để gửi và nhận cookie.
+- Các biến mới trong `.env`: `JWT_EXPIRES_IN=15m`, `JWT_REFRESH_SECRET=<chuỗi khác JWT_SECRET>`, `JWT_REFRESH_DAYS=7`.
+
+## G. Bước tiếp theo
 Nối giao diện web (file HTML) với các API này, thay dữ liệu localStorage bằng `fetch`.

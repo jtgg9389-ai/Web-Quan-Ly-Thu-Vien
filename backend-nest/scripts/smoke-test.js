@@ -1,14 +1,14 @@
 // Chạy thử toàn bộ API: npm run smoke  (cần server đang chạy)
 const B = process.env.API || 'http://localhost:3000/api';
 let ok = 0, bad = 0;
-const call = async (m, p, body, tok) => {
+const call = async (m, p, body, tok, extra) => {
   const r = await fetch(B + p, {
     method: m,
-    headers: { 'Content-Type': 'application/json', ...(tok ? { Authorization: 'Bearer ' + tok } : {}) },
+    headers: { 'Content-Type': 'application/json', ...(tok ? { Authorization: 'Bearer ' + tok } : {}), ...(extra || {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
   let j = null; try { j = await r.json(); } catch {}
-  return { s: r.status, j };
+  return { s: r.status, j, c: (r.headers.get('set-cookie') || '').split(';')[0] };
 };
 const t = (name, c) => { c ? ok++ : bad++; console.log((c ? '✔ ' : '✘ ') + name); };
 
@@ -68,6 +68,17 @@ const t = (name, c) => { c ? ok++ : bad++; console.log((c ? '✔ ' : '✘ ') + n
   t('Thủ thư không sửa được cài đặt -> 403', (await call('PUT', '/settings', { finePerDay: 1 }, L)).s === 403);
   t('Thủ thư không vào /users -> 403', (await call('GET', '/users', null, L)).s === 403);
   t('Admin xem /users', (await call('GET', '/users', null, A)).s === 200);
+
+  // Refresh token (cookie httpOnly)
+  const dl = await call('POST', '/auth/login', { username: 'docgia', password: 'docgia123' });
+  t('Đăng nhập set cookie refresh_token', dl.s === 201 && dl.c.startsWith('refresh_token=') && !dl.j.refreshToken);
+  const rf = await call('POST', '/auth/refresh', null, null, { Cookie: dl.c });
+  t('Refresh cấp access token mới', rf.s === 201 && rf.j.accessToken && rf.c.startsWith('refresh_token='));
+  t('Access token mới dùng được', (await call('GET', '/auth/me', null, rf.j.accessToken)).s === 200);
+  t('Refresh token cũ bị thu hồi -> 401', (await call('POST', '/auth/refresh', null, null, { Cookie: dl.c })).s === 401);
+  t('Không có cookie -> 401', (await call('POST', '/auth/refresh')).s === 401);
+  await call('POST', '/auth/logout', null, null, { Cookie: rf.c });
+  t('Sau đăng xuất, refresh -> 401', (await call('POST', '/auth/refresh', null, null, { Cookie: rf.c })).s === 401);
 
   console.log(`\nKết quả: ${ok} đạt, ${bad} lỗi`);
   process.exit(bad ? 1 : 0);

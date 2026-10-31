@@ -24,6 +24,10 @@ export class User {
   @JoinColumn({ name: 'reader_id' })
   reader: Reader;
 
+  // Băm SHA-256 của refresh token đang hợp lệ (null = đã đăng xuất / thu hồi)
+  @Column({ name: 'refresh_token_hash', type: 'varchar', length: 64, nullable: true, select: false })
+  refreshTokenHash: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 }
