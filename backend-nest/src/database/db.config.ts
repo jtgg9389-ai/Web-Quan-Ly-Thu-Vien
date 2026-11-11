@@ -13,9 +13,17 @@ export function buildDbOptions(env: Record<string, string | undefined>): DataSou
       username: env.DB_USER || 'root',
       password: env.DB_PASSWORD || '',
       database: env.DB_NAME || 'quan_ly_thu_vien',
+
       charset: 'utf8mb4',
+      ssl: env.DB_SSL === 'true'
+        ? {
+            minVersion: 'TLSv1.2',
+            rejectUnauthorized: true,
+          }
+        : undefined,
       entities: ENTITIES,
       synchronize,
+
     };
   }
   const location = env.SQLITE_PATH || 'data/library.sqlite';
