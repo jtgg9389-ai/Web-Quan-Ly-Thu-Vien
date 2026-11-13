@@ -38,7 +38,11 @@ async function main() {
         { code: 'R004', fullName: 'Phạm Quốc Dũng', phone: '0933222111', address: 'Bình Thạnh, TP.HCM' },
       ]);
       const users = await m.save(User, [
+<<<<<<< HEAD
         { username: 'admin', passwordHash: hashSync('Vi123@123', 10), fullName: 'Quản trị viên', role: Role.Admin },
+=======
+        { username: 'admin', passwordHash: hashSync('admin123', 10), fullName: 'Quản trị viên', role: Role.Admin },
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
         { username: 'thuthu', passwordHash: hashSync('thuthu123', 10), fullName: 'Thủ thư Mai', role: Role.Librarian },
         { username: 'docgia', passwordHash: hashSync('docgia123', 10), fullName: 'Nguyễn Văn An', role: Role.Reader, reader: readers[0] },
       ]);
@@ -53,7 +57,11 @@ async function main() {
       await m.query(`UPDATE books SET available = quantity -
         (SELECT COUNT(*) FROM loans WHERE loans.book_id = books.id AND loans.return_date IS NULL)`);
     });
+<<<<<<< HEAD
     console.log('✅ Đã nạp dữ liệu mẫu. Tài khoản: admin/Vi123@123, thuthu/thuthu123, docgia/docgia123');
+=======
+    console.log('✅ Đã nạp dữ liệu mẫu. Tài khoản: admin/admin123, thuthu/thuthu123, docgia/docgia123');
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   } finally {
     await ds.destroy();
   }

@@ -12,7 +12,10 @@ import { ReadersModule } from './readers/readers.module';
 import { ReportsModule } from './reports/reports.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
+<<<<<<< HEAD
 import { PasswordResetModule } from './password-reset/password-reset.module';
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
 
 @Module({
   imports: [
@@ -26,7 +29,10 @@ import { PasswordResetModule } from './password-reset/password-reset.module';
     LoansModule,
     UsersModule,
     ReportsModule,
+<<<<<<< HEAD
     PasswordResetModule, // [THÊM MỚI]
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   ],
   controllers: [AppController],
   providers: [
@@ -34,4 +40,8 @@ import { PasswordResetModule } from './password-reset/password-reset.module';
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
+<<<<<<< HEAD
 export class AppModule {}
+=======
+export class AppModule {}
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348

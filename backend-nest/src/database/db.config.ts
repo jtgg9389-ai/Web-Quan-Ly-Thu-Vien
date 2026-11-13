@@ -3,6 +3,10 @@ import { dirname } from 'path';
 import { DataSourceOptions } from 'typeorm';
 import { ENTITIES } from '../entities';
 
+<<<<<<< HEAD
+=======
+// DB_TYPE=mysql -> MySQL (ở trường); mặc định sqlite (ở nhà, không cần cài gì)
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
 export function buildDbOptions(env: Record<string, string | undefined>): DataSourceOptions {
   const synchronize = (env.DB_SYNC ?? 'true') === 'true';
   if ((env.DB_TYPE || 'sqlite') === 'mysql') {
@@ -16,13 +20,20 @@ export function buildDbOptions(env: Record<string, string | undefined>): DataSou
       charset: 'utf8mb4',
       entities: ENTITIES,
       synchronize,
+<<<<<<< HEAD
       ssl: {
         rejectUnauthorized: false, // 👈 Thêm dòng này để kết nối thành công với Aiven
       },
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
     };
   }
   const location = env.SQLITE_PATH || 'data/library.sqlite';
   mkdirSync(dirname(location), { recursive: true });
   // sql.js: SQLite thuần JavaScript, không cần biên dịch, ghi tự động ra file
   return { type: 'sqljs', location, autoSave: true, entities: ENTITIES, synchronize };
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348

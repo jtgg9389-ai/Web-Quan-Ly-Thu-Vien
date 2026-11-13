@@ -15,7 +15,11 @@ export class AuthController {
 
   private setCookie(res: Response, token: string) {
     res.cookie(COOKIE, token, {
+<<<<<<< HEAD
       httpOnly: true,
+=======
+      httpOnly: true, // JavaScript phía trình duyệt không đọc được -> chống XSS đánh cắp token
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       path: COOKIE_PATH,
@@ -62,6 +66,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Lấy thông tin user hiện tại từ access token' })
   @Get('me')
   me(@CurrentUser() u: AuthUser) { return this.s.me(u.sub); }
+<<<<<<< HEAD
 
   @Public()
   @ApiOperation({ summary: 'Gửi yêu cầu quên mật khẩu (gửi mã qua email)' })
@@ -77,3 +82,6 @@ export class AuthController {
     return this.s.resetPassword(body.token, body.newPassword);
   }
 }
+=======
+}
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348

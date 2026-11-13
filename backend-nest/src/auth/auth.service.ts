@@ -5,7 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compareSync, hashSync } from 'bcryptjs';
 import { createHash, randomUUID } from 'crypto';
 import { DataSource, Repository } from 'typeorm';
+<<<<<<< HEAD
 import * as nodemailer from 'nodemailer';
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
 import { Role } from '../common/role.enum';
 import { isDuplicate, nextCode } from '../common/utils';
 import { Reader, User } from '../entities';
@@ -29,6 +32,10 @@ export class AuthService {
     return Number(this.cfg.get<string>('JWT_REFRESH_DAYS', '7')) || 7;
   }
 
+<<<<<<< HEAD
+=======
+  // Tạo access token (ngắn hạn) + refresh token (dài hạn), lưu băm refresh token để có thể thu hồi
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   private async issue(u: User) {
     const readerId = u.reader?.id ?? null;
     const accessToken = this.jwt.sign({ sub: u.id, username: u.username, role: u.role, readerId });
@@ -46,6 +53,7 @@ export class AuthService {
 
   async register(d: RegisterDto) {
     if (await this.users.findOneBy({ username: d.username })) throw new ConflictException('Tên đăng nhập đã tồn tại');
+<<<<<<< HEAD
     const email = d.email.trim().toLowerCase();
 
     if (await this.users.findOneBy({ email })) {
@@ -62,6 +70,14 @@ export class AuthService {
           fullName: d.fullName,
           role: Role.Reader,
           reader,
+=======
+    try {
+      const user = await this.ds.transaction(async (m) => {
+        const code = await nextCode(m.getRepository(Reader), 'R');
+        const reader = await m.save(Reader, m.create(Reader, { code, fullName: d.fullName, phone: d.phone, address: d.address }));
+        return m.save(User, m.create(User, {
+          username: d.username, passwordHash: hashSync(d.password, 10), fullName: d.fullName, role: Role.Reader, reader,
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
         }));
       });
       return this.issue(user);
@@ -81,6 +97,10 @@ export class AuthService {
     return this.issue(user);
   }
 
+<<<<<<< HEAD
+=======
+  // Đổi refresh token (từ cookie) lấy access token mới; refresh token cũ bị thay thế (rotation)
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   async refresh(token?: string) {
     if (!token) throw new UnauthorizedException('Không có refresh token');
     let payload: { sub: number };
@@ -100,12 +120,20 @@ export class AuthService {
     return this.issue(user);
   }
 
+<<<<<<< HEAD
+=======
+  // Đăng xuất: thu hồi refresh token (bỏ qua nếu token không hợp lệ)
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   async logout(token?: string) {
     if (token) {
       try {
         const p: { sub: number } = this.jwt.verify(token, { secret: this.refreshSecret });
         await this.users.update(p.sub, { refreshTokenHash: null });
+<<<<<<< HEAD
       } catch { /* token hỏng/hết hạn */ }
+=======
+      } catch { /* token hỏng/hết hạn: coi như đã đăng xuất */ }
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
     }
     return { message: 'Đã đăng xuất' };
   }
@@ -115,6 +143,7 @@ export class AuthService {
     if (!u) throw new UnauthorizedException('Tài khoản không còn tồn tại');
     return { id: u.id, username: u.username, fullName: u.fullName, role: u.role, reader: u.reader };
   }
+<<<<<<< HEAD
 
   // === XỬ LÝ QUÊN MẬT KHẨU & GỬI MAIL THẬT ===
   async forgotPassword(email: string) {
@@ -172,3 +201,6 @@ export class AuthService {
     return { message: 'Đặt lại mật khẩu thành công!' };
   }
 }
+=======
+}
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348

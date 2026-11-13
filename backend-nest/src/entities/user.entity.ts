@@ -10,7 +10,10 @@ export class User {
   @Column({ length: 50, unique: true })
   username: string;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   // select: false -> mặc định không trả mật khẩu khi truy vấn
   @Column({ name: 'password_hash', length: 255, select: false })
   passwordHash: string;
@@ -18,6 +21,7 @@ export class User {
   @Column({ name: 'full_name', length: 100 })
   fullName: string;
 
+<<<<<<< HEAD
   // Email dùng để đăng ký và khôi phục mật khẩu
   @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   email: string | null;
@@ -26,6 +30,8 @@ export class User {
   @Column({ name: 'reset_token', type: 'varchar', length: 10, nullable: true })
   resetToken: string | null;
 
+=======
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
   @Column({ type: 'simple-enum', enum: Role, default: Role.Reader })
   role: Role;
 
@@ -39,4 +45,8 @@ export class User {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
