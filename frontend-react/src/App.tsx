@@ -14,11 +14,8 @@ import { Readers } from './pages/Readers'
 import { Reports } from './pages/Reports'
 import { Return } from './pages/Return'
 import { Settings } from './pages/Settings'
-<<<<<<< HEAD
 // >>> THÊM DÒNG NÀY ĐỂ IMPORT TRANG QUÊN MẬT KHẨU <<<
 import ForgotPassword from './pages/ForgotPassword'
-=======
->>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
 
 export default function App() {
   const { msg, ready } = useStore()
@@ -27,12 +24,9 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-<<<<<<< HEAD
         {/* >>> THÊM ROUTE NÀY VÀO DƯỚI LOGIN <<< */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         
-=======
->>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/books" element={<Books />} />
@@ -52,8 +46,5 @@ export default function App() {
       {msg && <div id="toast">{msg}</div>}
     </BrowserRouter>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
+
