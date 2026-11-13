@@ -9,11 +9,7 @@ interface Store {
   db: DB; me: User | null; msg: string; ready: boolean
   toast: (m: string) => void
   login: (u: string, p: string) => Promise<string | null>
-<<<<<<< HEAD
-  signup: (d: {u: string;p: string;name:string;email: string;phone: string;addr: string;}) => Promise<string | null>;
-=======
-  signup: (d: { u: string; p: string; name: string; phone: string; addr: string }) => Promise<string | null>
->>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
+  signup: (d: { u: string; p: string; name: string; email?: string; phone: string; addr: string }) => Promise<string | null>
   logout: () => Promise<void>
   saveBook: (code: string | undefined, v: Record<string, string>) => Promise<Err>
   delBook: (code: string) => Promise<Err>
@@ -63,39 +59,24 @@ export function Provider({ children }: { children: ReactNode }) {
   const login = async (u: string, p: string) => {
     try { const r = await api('/auth/login', 'POST', { username: u, password: p }); await enter(r.accessToken); return null } catch (e) { return errMsg(e) }
   }
-<<<<<<< HEAD
-  const signup = async (d: {u: string;
-    p: string;
-    name: string;
-    email: string;
-    phone: string;
-    addr: string;
-  }) => {
+
+  const signup = async (d: { u: string; p: string; name: string; email?: string; phone: string; addr: string }) => {
     try {
       const r = await api('/auth/register', 'POST', {
         fullName: d.name,
-        email: d.email,
+        email: d.email || '',
         phone: d.phone,
         address: d.addr,
         username: d.u,
         password: d.p
       })
-  
       await enter(r.accessToken)
       return null
     } catch (e) {
       return errMsg(e)
     }
   }
-  
-=======
-  const signup = async (d: { u: string; p: string; name: string; phone: string; addr: string }) => {
-    try {
-      const r = await api('/auth/register', 'POST', { fullName: d.name, phone: d.phone, address: d.addr, username: d.u, password: d.p })
-      await enter(r.accessToken); return null
-    } catch (e) { return errMsg(e) }
-  }
->>>>>>> b87cac6dd30c98b70e4b7a9d9940984bb3298348
+
   const logout = async () => {
     try { await api('/auth/logout', 'POST') } catch { /* bỏ qua */ }
     setToken(null); ses.current = null; setMe(null); setDb(EMPTY)
@@ -111,6 +92,7 @@ export function Provider({ children }: { children: ReactNode }) {
     const body = { title: v.name, author: v.author, category: v.cat, quantity: +v.qty, image: v.img || '', description: v.desc || '' }
     return code ? api(`/books/${pk(dbRef.current.books, code)}`, 'PATCH', body) : api('/books', 'POST', body)
   })
+
   const delBook: Store['delBook'] = code => run(() => api(`/books/${pk(dbRef.current.books, code)}`, 'DELETE'))
   const saveReader: Store['saveReader'] = (code, v) => run(() => {
     const body = { fullName: v.name, phone: v.phone, address: v.addr }
