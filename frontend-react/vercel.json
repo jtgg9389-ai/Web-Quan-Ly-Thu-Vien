@@ -1,6 +1,12 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://web-quan-ly-thu-vien-r061.onrender.com/api/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://web-quan-ly-thu-vien-r061.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
